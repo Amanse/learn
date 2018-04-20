@@ -59,7 +59,7 @@ $userName = DB::query('SELECT username FROM users WHERE id=:userid', array(':use
 if(DB::query('SELECT * FROM notification WHERE reciever=:userid', array(':userid'=>$userid))){
 	$notifications = DB::query('SELECT * FROM notification WHERE reciever=:userid ORDER BY id DESC', array(':userid'=>$userid));
 
-	//echo "<h1>We have cleared the posts database! Good luck!";	
+	echo "<h1>We have cleared the posts database! Good luck!";	
 
 	foreach ($notifications as $n) {
 
