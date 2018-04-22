@@ -108,7 +108,7 @@ if(isset($_GET['username'])){
     <h1 class="title title-1"><?php echo $username; if($isVerified){echo "<i class='material-icons' style='font-size:40px;'>verified_user</i>";} ?></h1>  
     <div class="column is-pulled-right"> 
     	<p class="control">
-    <a href="index.php" class='is-pulled-right button is-info'>
+    <a href="index.php" class=''>
               Home
             </a>
             <?php if($userid == $followerid){ ?>
