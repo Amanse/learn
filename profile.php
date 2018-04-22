@@ -103,14 +103,14 @@ if(isset($_GET['username'])){
 </head>
 
 </body>
-<section class="hero is-info is-medium" style="padding-bottom: 5px;">
+<section class="hero is-info is-medium is-fullwidth" style="padding-bottom: 5px;">
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
       <div class="container">
         <div class="navbar-brand">
           <span class="navbar-item">
-            <h1 class="title title-1"><?php echo $username; if($isVerified){echo "<i class='material-icons' style='font-size:40px;'>verified_user</i>";} ?></h1>
+            <h1 class="title title-1"><?php if(strlen($username <= 9)){echo substr($username, 0 ,7);}else{echo $username;} if($isVerified){echo "<i class='material-icons' style='font-size:38px;'>verified_user</i>";} ?></h1>
           </span>
           <span class="navbar-burger burger" id='NavBarToggle' data-target="navbarMenuHeroA">
             <span></span>
@@ -153,6 +153,7 @@ if(isset($_GET['username'])){
       </div>
     </nav>
   </div>
+
 				<br>
 				<div class="container">
 					<form action="profile.php?username=<?php echo $username; ?>" method="post">
