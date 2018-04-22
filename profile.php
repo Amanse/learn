@@ -88,7 +88,7 @@ if(isset($_GET['username'])){
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
+	<script src='https://code.jquery.com/jquery-3.3.1.js'></script>	
   <style type="text/css">
   	@import url('https://fonts.googleapis.com/css?family=ABeeZee|Questrial|Ropa+Sans');
   	.title-1{
@@ -112,7 +112,7 @@ if(isset($_GET['username'])){
           <span class="navbar-item">
             <h1 class="title title-1"><?php echo $username; if($isVerified){echo "<i class='material-icons' style='font-size:40px;'>verified_user</i>";} ?></h1>
           </span>
-          <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+          <span class="navbar-burger burger" id='NavBarToggle' data-target="navbarMenuHeroA">
             <span></span>
             <span></span>
             <span></span>
@@ -199,4 +199,9 @@ if(Login::isLoggedIn() == $userid){
 	echo "<h2>No posts Made by users!";
 }
 ?>
+<script>
+  	$('NavBarToggle').click(function(){
+		$('navbarMenuHeroA').classToggle('is-active');
+	});	
+</script>
 </html>
