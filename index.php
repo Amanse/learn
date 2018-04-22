@@ -2,169 +2,206 @@
 include('classes/db.php');
 include('classes/Login.php');
 include('classes/Post.php');
-include('classes/Comment.php');
 include('classes/notify.php');
-$showTimeline = False;
-$searchResults = "";
-$users= "";
-$con = mysqli_connect("localhost", "root", "", "finale");
+include('classes/Comment.php');
+$username = "";
+$isFollowing = "";
+$followCheck = "";
+$isVerified = False;
+$posts = "";
+$message = "";
 if(Login::isLoggedIn()){
-	$userid = Login::isLoggedIn();
-	$userName = DB::query('SELECT username FROM users WHERE id=:userid', array(':userid'=>$userid))[0]['username'];
-	$showTimeline = True;
-}else{
-	header('LOCATION: create-account.php');
-}
+if(isset($_GET['username'])){
+	if(DB::query('SELECT username FROM users WHERE username=:username', array(':username'=>$_GET['username']))){
 
+		$username = DB::query('SELECT username FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['username'];
+		$userid = DB::query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
+		$followerid = Login::isLoggedIn();
+		$followCheck = DB::query('SELECT user_id FROM followers WHERE follower_id=:followerid AND user_id=:userid', array(':userid'=>$userid, ':followerid'=>$followerid));
 
-if(isset($_GET['postid'])){
-	$PosterId = DB::query('SELECT user_id FROM posts WHERE id=:id', array(":id"=>$_GET['postid']))[0]['user_id'];
-	Post::LikePost($_GET['postid'], Login::isLoggedIn(), $PosterId);
-}
+		if(!$followCheck){
+			$isFollowing = False;
+		}else{
+			$isFollowing = True;
+		}
 
-if(isset($_POST['comment'])){
-	Comment::MakeComment($_POST['commentbody'], $_GET['postsid'], $userid);
-}
+		if(DB::query('SELECT * FROM followers WHERE user_id=:userid AND follower_id=:followerid', array(':userid'=>$userid, ':followerid'=>'10'))){
+			$isVerified = True;
+		}
 
-if(isset($_POST['search'])){
-	$searchQuery = $_POST['searchQuery'];
-	$tosearch = explode(" ", $searchQuery);
-	if(count($tosearch) == 1){
-		$tosearch = str_split($tosearch[0], 2);
-	}
-	$whereclause = "";
-	$paramsarray = array(':username'=>'%'.$searchQuery.'%');
-	for ($i = 0; $i < count($tosearch); $i++){
-		$whereclause .= " OR username LIKE :u$i";
-		$paramsarray[":u$i"] = $tosearch[$i];
-	}
-	$users = DB::query('SELECT username FROM users WHERE username LIKE :username '.$whereclause.'', $paramsarray);
-}
-
-?>
-
-<head>
-	 <meta charset="utf-8">
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
-	<script src="http://code.jquery.com/jquery-3.3.1.js"></script>
-<style type="text/css">
-	@import url('https://fonts.googleapis.com/css?family=ABeeZee|Questrial|Ropa+Sans');
-
-	.Title {
-		font-size: 40px;
-		color: black;
-		text-align: center;
-	}
-
-	.post {
-		margin-bottom: 0;
-		padding: 0;
-		padding-left: 10px;
-		padding-bottom: 10px;
-	}
-
-	.comments {
-		margin-bottom: 0;
-		padding: 0;
-		padding-left: 15px;
-		font-size: 20px;
-	}
-
-	.username{
-		padding-left: 20px;
-		font-size: 14px;
-		font-style: none;
-	}
-
-	.searchBox {
-		width: 25%;
-
-	}
-
-</style>
-<title>EverVibe - Homepage</title>
-</head>
-<body>
-<h1 class="title Title is-bold is-info notification" style="font-family: 'ABeeZee', sans-serif; margin-bottom: 0;">EverVibe</h1>
-<section style="margin-bottom: 0;" class="hero is-danger">	
-	<div class="hero-body">
-		<div class="columns">	
-			<div class="clomumn">	
-			<h1 style="font-size:30px;" >Timeline</h1>
-			<h1 class="sub-title">Here you could see all the posts and comments on all the posts made by the people you follow!</h1>
-			</div>	
-		</div>
-		<div class="cloumns">
-			<div class="cloumn ">			
-					<form action="index.php" method="post">
-					<input type="text" name="searchQuery" class='input is-primary is-focused is-rounded searchBox' >		 
-					<button type="submit" name="search" class="button is-dark">Search</button>
-					</form>  
-					<a href="profile.php?username=<?php echo $userName?>" class='button is-warning is-rounded' >My profile</a>
-					<a href="logout.php" class="button is-info is-rounded">Logout</a>
-					<a href="notify.php" class='button is-primary is-rounded'>Notifications</a>
-			</div>
-			<div class="cloumn">
-			<?php	
-				if($users != ""){
-					echo "<span class='result'> Results </span><br>";
-					echo "<ul style='list-style:none;'>";
-				foreach ($users as $u ) {
-					echo "<li><a class='results' href='profile.php?username=".$u['username']."'>".$u['username'] . "</a><br></li>";
+		if(isset($_POST['follow'])){
+				//$followCheck = DB::query('SELECT user_id FROM followers WHERE follower_id=:userid', array(':userid'=>$followerid));
+				if(!$followCheck){
+					DB::query('INSERT INTO followers VALUES (\'\', :userid, :followerid)', array(':userid'=>$userid, ':followerid'=>$followerid));
+					$isFollowing = True;
+					DB::query("INSERT INTO notification VALUES('', :type, :reciever, :sender, :extra)", array(":type"=>3, ":reciever"=>$userid, ":sender"=>$followerid,":extra"=>""));
+				}else{
+					DB::query('DELETE FROM followers WHERE user_id=:userid AND follower_id=:followerid', array(':userid'=>$userid, ':followerid'=>$followerid));
+					$isFollowing = False;
 				}
-					echo "</ul>";
-				}	
-			?>		
-			</div>
-		</div>
-	</div>
-</section>
-<hr>	
-<?php
+		}
 
-$followingposts =DB::query("SELECT posts.id, posts.body, posts.likes, users.username FROM users, posts, followers
-WHERE posts.user_id = followers.user_id
-AND users.id = posts.user_id
-AND follower_id='$userid'
-ORDER BY posts.posted_at DESC
- ");
+		if(isset($_POST['unfollow'])){
+			if($followerid != $userid){
+				//$followCheck = DB::query('SELECT user_id FROM followers WHERE follower_id=:userid', array(':userid'=>$followerid));
+					if($followCheck){
+						DB::query('DELETE FROM followers WHERE user_id=:userid AND follower_id=:followerid', array(':userid'=>$userid, ':followerid'=>$followerid));
+						$isFollowing = False;
+					}else{
+						echo "Not Following";
+					}
+				}
+			}
 
-//$followingposts .= "SELECT posts.id, posts.body, posts.likes, users.username, posts.posted_at FROM posts, users WHERE users.id='$userid' ORDER BY posts.posted_at DESC";
-foreach ($followingposts as $posts) {
-	//echo "<div style='background-color: #334'>";
-	echo "<div class='container'><b><a href='profile.php?username='". $posts['username'] ."'>". $posts['username'] . "</a></b><div class='hero-body post'><h3 class='Title'>".Post::link_add($posts['body']) ."</div></h3>";
-	echo "<form action='index.php?postid=".$posts['id']."' method='post'>";
-if(!DB::query('SELECT user_id FROM post_likes WHERE user_id=:userid AND post_id=:postid', array(':postid'=>$posts['id'], ':userid'=>$userid))){
-	echo"<input type='submit' name='like' class='button is-info' value='Like'>";
+		if(isset($_POST['post'])){
+			Post::MakePost($_POST['postbody'], Login::isLoggedIn(), $userid);
+		}
+
+		if(isset($_GET['postid'])){
+			if(isset($_POST['deletepost'])){
+				if(DB::query("SELECT id FROM posts WHERE id=:postid AND user_id=:user_id", array(':postid'=>$_GET['postid'], ':user_id'=>$followerid))){
+					DB::query('DELETE FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid));
+					DB::query('DELETE FROM post_likes WHERE post_id=:postid', array(':postid'=>$_GET['postid']));
+					$message = "<div class='alert alert-success alert-dismissiable'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Post deleted</strong></div>";
+				}
+			}else{
+			Post::LikePost($_GET['postid'], Login::isLoggedIn(), $userid);
+			}		
+		}
+
+		$posts = Post::displayPosts($userid, $username, Login::isLoggedIn());
+
+	}else{
+		die('User Not Found');
+	}
+}
 }else{
-	echo"<input type='submit' name='like' class='button is-primary' value='Unlike'>";
+	die('Not logged in!');
 }
-			echo "<span>".$posts['likes']." Likes</span>
-			</form>
-
-			<form action='index.php?postsid=".$posts['id']."' method='post'>
-			<label for='commentbody' class='label'>Comments</label>
-			<textarea name='commentbody' class='input is-small is-rounded is-danger' rows='1' cols='20'></textarea><br>
-			<input type='submit' name='comment' class='button is-warning' Value='Comment'>
-			</form>";
-			//echo "<button type='button' class='btn btn-link' style='color:white' data-toggle='modal' data-target='#myModal'>View all</button>";
-			Comment::displayComments($posts['id']);
-			echo "<button type='button' id='ShowComments' class='light'>Show/Hide Comments</button>";
-			echo "</div>";
-			echo "<hr >";
-			//echo "</div>";
-}
-
-
 
  ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Profile Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<script src='https://code.jquery.com/jquery-3.3.1.js'></script>	
+  <style type="text/css">
+  	@import url('https://fonts.googleapis.com/css?family=ABeeZee|Questrial|Ropa+Sans');
+  	.title-1{
+  		font-size: 60px;
+  		font-family: 'ABeeZee', sans-serif;
+  	}
+
+  	textarea {
+  		resize: none;
+  	}
+  </style>
+</head>
+
 </body>
+<section class="hero is-info is-medium" style="padding-bottom: 5px;">
+  <!-- Hero head: will stick at the top -->
+  <div class="hero-head">
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-brand">
+          <span class="navbar-item">
+            <h1 class="title title-1"><?php echo $username; if($isVerified){echo "<i class='material-icons' style='font-size:40px;'>verified_user</i>";} ?></h1>
+          </span>
+          <span class="navbar-burger burger" id='NavBarToggle' data-target="navbarMenuHeroA">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </div>
+        <div id="navbarMenuHeroA" class="navbar-menu">
+          <div class="navbar-end">
+            <a href="index.php" class="navbar-item">
+              Home
+            </a>
+            <?php if($userid == $followerid){ ?>
+            <a class="navbar-item" href="change-password.php">
+              Change-Password
+            </a>
+            <a href="notify.php" class="navbar-item">
+              Notification
+            </a>
+            <span class="navbar-item">
+              <a href='logout.php' class="button is-primary is-inverted">
+                Logout
+              </a>
+			</span>
+			<?php }else{ ?>
+			<a class="navbar-item" href="full-chat.php?username=<?php echo $_GET['username']; ?>">
+              Chat
+            </a>
+            <a href="about.php?username=<?php echo $_GET['username']; ?>" class="navbar-item " >
+              About
+            </a>
+            <span class="navbar-item">
+              <a href='logout.php' class="button is-primary is-inverted">
+                Logout
+              </a>
+			</span>
+			<?php } ?>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+				<br>
+				<div class="container">
+					<form action="profile.php?username=<?php echo $username; ?>" method="post">
+					<?php if($followerid != $userid){
+					if(!$isFollowing){
+					echo "<input type='submit' name='follow' class='button is-danger is-focused is-medium' value='Follow'>";
+					}else{
+					echo "<input type='submit' name='follow' class='button is-danger is-focused is-medium' value='Unfollow'>";
+					 } }?>
+				 </form>
+</section>
+<br>
+<?php
+if(Login::isLoggedIn() == $userid){
+?>
+	<div class="container-fluid">
+<form action="profile.php?username=<?php echo $username ?>" method="post">
+	<div class="cloumns">
+		<center>
+		<div class="column is-one-quarter">
+			<label class="label">What's on your mind?</label>
+		</div>
+		<div class="column is-two-thirds">
+			<textarea name="postbody" rows="5" cols="25" class="input is-rounded is-focused is-primary" maxlength="120"></textarea>
+		</div>
+		<div class="column">
+			<input type="submit" class="button is-dark" name="post" value="Post">
+		</div>
+		</form>
+	</div>
+	</center>
+</div>
+<br>
+<?php } ?>
+</div>
+	<?php
+	if($posts != ""){
+	 echo "<div class='col-lg-3'></div>";		
+	 echo "<div class='col-lg-6'>";
+	 echo $posts;
+	 echo "</div>";
+	 echo "<div class='col-lg-3'></div>";
+	}else{
+	echo "<h2>No posts Made by users!";
+}
+?>
 <script>
-	$('#AllC').hide();
-	$('#ShowComments').click(function(){
-		//$('#NotAllC').hide();
-		$('#AllC').toggle();
-		//$('#ShowComment').innerHTML='Hide Comments';	
-	});
+  	$('NavBarToggle').click(function(){
+		$('navbarMenuHeroA').classToggle('is-active');
+	});	
 </script>
+</html>
