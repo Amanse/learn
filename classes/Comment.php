@@ -20,7 +20,7 @@ class Comment{
 		 
 		 foreach ($comments as $comment ) {
 		 	echo "<div id='AllC'>";
-		  	echo "<div class=' notification is-info comments'>".$comment['comment']." <div class='is-danger' style='padding:5px;'> ~<small class='username'><a href='profile.php?username=".$comment['username']."'>".$comment['username']."</a></small></div></div>";
+		  	echo "<div class=' notification is-info comments'>".$comment['comment']." <div class='is-danger' style='padding:5px;'> ~<small class='username'><a href='profile.php?username=".$comment['username']."'>".$comment['username']."</a></small></div></div><br>";
 		  	echo "</div>";
 		  } 
 		 // echo "<button type='button' id='ShowComments' class='light'>Show/Hide Comments</button>";
