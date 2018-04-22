@@ -17,11 +17,14 @@ class Comment{
 	public static function displayComments($postid){
 
 		$comments = DB::query('SELECT comments.comment, users.username FROM comments, users WHERE post_id = :postid AND comments.user_id = users.id ORDER BY comments.id DESC LIMIT 2 ', array(':postid'=>$postid));
-		 echo "<div id='AllC'>";
+		 
 		 foreach ($comments as $comment ) {
+		 	echo "<div id='AllC'>";
 		  	echo "<div class=' notification is-info comments'>".$comment['comment']." <div class='is-danger' style='padding:5px;'> ~<small class='username'><a href='profile.php?username=".$comment['username']."'>".$comment['username']."</a></small></div></div>";
+		  	echo "</div>";
 		  } 
-		  echo "</div>";
+		 // echo "<button type='button' id='ShowComments' class='light'>Show/Hide Comments</button>";
+		  
 	}	
 }
 

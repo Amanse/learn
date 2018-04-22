@@ -8,8 +8,8 @@ if(isset($_GET['id'])){
 	$posts = DB::query("SELECT * FROM posts WHERE id=:id", array(":id"=>$_GET['id']));
 
 	foreach ($posts as $post) {
-		echo "<h1 class='title'>".$post['body']."</h1>";
-		echo "<br>";
+		//echo "<h1 class='title'>".$post['body']."</h1>";
+		//echo "<br>";
 		Comment::displayComments($_GET['id']);
 	}
 
