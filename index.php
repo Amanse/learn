@@ -161,8 +161,3 @@ if(!DB::query('SELECT user_id FROM post_likes WHERE user_id=:userid AND post_id=
 
  ?>
 </body>
-<script>
-	function GetComments(id) {
-		
-	}
-</script>
