@@ -133,7 +133,7 @@ ORDER BY posts.posted_at DESC
 //$followingposts .= "SELECT posts.id, posts.body, posts.likes, users.username, posts.posted_at FROM posts, users WHERE users.id='$userid' ORDER BY posts.posted_at DESC";
 foreach ($followingposts as $posts) {
 	//echo "<div style='background-color: #334'>";
-	echo "<div class='container'><b><a href='profile.php?username='". $posts['username'] ."'>". $posts['username'] . "</a></b><div class='hero-body post'><h3 class='Title'>".Post::link_add($posts['body']) ."</div></h3>";
+	echo "<div class='container'><b><a href='profile.php?username=". $posts['username'] ."'>". $posts['username'] . "</a></b><div class='hero-body post'><h3 class='Title'>".Post::link_add($posts['body']) ."</div></h3>";
 	echo "<form action='index.php?postid=".$posts['id']."' method='post'>";
 if(!DB::query('SELECT user_id FROM post_likes WHERE user_id=:userid AND post_id=:postid', array(':postid'=>$posts['id'], ':userid'=>$userid))){
 	echo"<input type='submit' name='like' class='button is-info' value='Like'>";
