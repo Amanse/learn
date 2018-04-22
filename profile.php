@@ -168,6 +168,17 @@ if(isset($_GET['username'])){
 <?php
 if(Login::isLoggedIn() == $userid){
 ?>
+<?php 
+if($_GET['username'] == 'AmanSetia'){
+	$connection = mysqli_connect("localhost", "root", "", "finale");
+	$row_count = mysqli_query($connection,"SELECT * FROM users");
+	$rows = mysqli_num_rows($row_count);
+	printf("Number of users on the site are %d.\n",$rows);
+	if($rows >= 10){
+		echo "Awesome nibbs";
+	}
+}
+ ?>
 	<div class="container-fluid">
 <form action="profile.php?username=<?php echo $username ?>" method="post">
 	<div class="cloumns">
