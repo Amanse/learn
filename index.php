@@ -18,8 +18,8 @@ if(Login::isLoggedIn()){
 
 
 if(isset($_GET['postid'])){
-	$userid = DB::query('SELECT user_id FROM posts WHERE id=:id', array(":id"=>$_GET['postid']))[0]['user_id'];
-	Post::LikePost($_GET['postid'], Login::isLoggedIn(), $userid);
+	$PosterId = DB::query('SELECT user_id FROM posts WHERE id=:id', array(":id"=>$_GET['postid']))[0]['user_id'];
+	Post::LikePost($_GET['postid'], Login::isLoggedIn(), $PosterId);
 }
 
 if(isset($_POST['comment'])){
@@ -150,7 +150,7 @@ if(!DB::query('SELECT user_id FROM post_likes WHERE user_id=:userid AND post_id=
 			</form>";
 			//echo "<button type='button' class='btn btn-link' style='color:white' data-toggle='modal' data-target='#myModal'>View all</button>";
 			Comment::displayComments($posts['id']);
-			echo "<button type='button' id='ShowComments' class='light'>Show Comments</button>";
+			echo "<button type='button' id='ShowComments' class='light'>Show/Hide Comments</button>";
 			echo "</div>";
 			echo "<hr >";
 			//echo "</div>";

@@ -52,14 +52,13 @@ if(Login::isLoggedIn()){
 		<h1 class="Title">EverVibe</h1>
 <?php	
 echo "<h2 class='sub-head'>Notifications</h2><br>";
+echo "<h1 style='font-family:arial;'>We have cleared the posts database! Good luck!</h1> <br><br>";
 echo "<div class='container-fluid pattern'>";
 $userid = Login::isLoggedIn();
 $userName = DB::query('SELECT username FROM users WHERE id=:userid', array(':userid'=>$userid))[0]['username'];
 
 if(DB::query('SELECT * FROM notification WHERE reciever=:userid', array(':userid'=>$userid))){
-	$notifications = DB::query('SELECT * FROM notification WHERE reciever=:userid ORDER BY id DESC', array(':userid'=>$userid));
-
-	echo "<h1>We have cleared the posts database! Good luck!";	
+	$notifications = DB::query('SELECT * FROM notification WHERE reciever=:userid ORDER BY id DESC', array(':userid'=>$userid));	
 
 	foreach ($notifications as $n) {
 
@@ -80,7 +79,7 @@ if(DB::query('SELECT * FROM notification WHERE reciever=:userid', array(':userid
 	}elseif ($n['type'] == 4) {
 		$senderName = DB::query('SELECT username FROM users WHERE id=:senderid', array(":senderid"=>$n['sender']))[0]['username'];
 		echo "<b><a href='profile.php?username=$senderName'>".$senderName."</a></b> sent you a message! see it <a href='full-chat.php?username=".$senderName."'> here </a> <hr>";
-	}else
+	}
 }
 }
 echo "</div>";

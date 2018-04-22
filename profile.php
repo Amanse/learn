@@ -86,7 +86,7 @@ if(isset($_GET['username'])){
   <title>Profile Page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+  <link rel="stylesheet" href="bulma-0.7.0/css/bulma.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <style type="text/css">
@@ -103,56 +103,35 @@ if(isset($_GET['username'])){
 </head>
 
 </body>
-<section class="hero is-info is-medium" style="padding-bottom: 5px;">
-  <!-- Hero head: will stick at the top -->
-  <div class="hero-head">
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <span class="navbar-item">
-            <h1 class="title title-1"><?php echo $username; if($isVerified){echo "<i class='material-icons' style='font-size:40px;'>verified_user</i>";} ?></h1>
-          </span>
-          <span class="navbar-burger burger" data-target="navbarMenuHeroA">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-        <div id="navbarMenuHeroA" class="navbar-menu">
-          <div class="navbar-end">
-            <a href="index.php" class="navbar-item">
+<div class="columns  is-mobile">
+	<div class="column notification is-primary">
+    <h1 class="title title-1"><?php echo $username; if($isVerified){echo "<i class='material-icons' style='font-size:40px;'>verified_user</i>";} ?></h1>  
+    <div class="column is-pulled-right"> 
+    	<p class="control">
+    <a href="index.php" class='is-pulled-right button is-info'>
               Home
             </a>
             <?php if($userid == $followerid){ ?>
-            <a class="navbar-item" href="change-password.php">
+            <a class='is-pulled-right is-warning button is-rounded' href="change-password.php">
               Change-Password
             </a>
-            <a href="notify.php" class="navbar-item">
+            <a href="notify.php" class='button is-dark is-rounded' >
               Notification
             </a>
-            <span class="navbar-item">
-              <a href='logout.php' class="button is-primary is-inverted">
-                Logout
-              </a>
-			</span>
+          
 			<?php }else{ ?>
-			<a class="navbar-item" href="full-chat.php?username=<?php echo $_GET['username']; ?>">
+			<a href="full-chat.php?username=<?php echo $_GET['username']; ?>" class='is-pulled-right button is-warning is-rounded'>
               Chat
             </a>
-            <a href="about.php?username=<?php echo $_GET['username']; ?>" class="navbar-item " >
+            <a href="about.php?username=<?php echo $_GET['username']; ?>" class='button is-info is-rounded' disabled>
               About
             </a>
-            <span class="navbar-item">
-              <a href='logout.php' class="button is-primary is-inverted">
+             <a href='logout.php' class="button is-primary is-inverted">
                 Logout
-              </a>
-			</span>
+              </a>	
 			<?php } ?>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
+       	</p>
+       	</div>
 				<br>
 				<div class="container">
 					<form action="profile.php?username=<?php echo $username; ?>" method="post">
@@ -161,9 +140,13 @@ if(isset($_GET['username'])){
 					echo "<input type='submit' name='follow' class='button is-danger is-focused is-medium' value='Follow'>";
 					}else{
 					echo "<input type='submit' name='follow' class='button is-danger is-focused is-medium' value='Unfollow'>";
-					 } }?>
+					 } }else{
+					 	echo "<a class='button is-danger' href='about.php?username=".$_GET['username']."' disabled>Go To About</a>";
+					 }?>
 				 </form>
-</section>
+				</div>
+			</div>
+		</div>
 <br>
 <?php
 if(Login::isLoggedIn() == $userid){
@@ -199,4 +182,17 @@ if(Login::isLoggedIn() == $userid){
 	echo "<h2>No posts Made by users!";
 }
 ?>
+</form>
+   <script type="text/javascript">
+        document.getElementById("nav-toggle").addEventListener ("click", toggleNav);
+        function toggleNav() {
+                var nav = document.getElementById("navbar-menu");
+                var className = nav.getAttribute("class");
+                if(className == "navbar-menu ") {
+                    nav.className = " navbar-menu is-active";
+                } else {
+                    nav.className = "navbar-menu ";
+                }
+        }
+    </script>
 </html>

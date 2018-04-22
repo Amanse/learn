@@ -2,7 +2,7 @@
 include('classes/db.php');
 if(isset($_POST['create-account'])){
 	$username = $_POST['username'];
-	$password = $_POST['pass'];
+	$password = $_POST['password'];
 	$email = $_POST['email'];
 
 	if(!DB::query('SELECT username FROM users WHERE username=:username', array(':username'=>$username))){
