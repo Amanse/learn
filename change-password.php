@@ -40,10 +40,44 @@ if(Login::isLoggedIn()){
 	die("Not logged in");
 }
  ?>
+ <!DOCTYPE html>
+ <html>
+ <head>
+ 	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ 	<title>Change password</title>
+ 	<script src="http://code.jquery.com/jquery-3.3.1.js"></script>
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+ </head>
+ <body>
+ 
+ </body>
+ </html>
 <h1>Change Password</h1>
 <form action="change-password.php" method="post">
 	<input type="password" name="oldpassword" placeholder="Current Password...."><p />
-	<input type="password" name="newpassword" placeholder="New Password...."><p />
-	<input type="password" name="newpasswordre" placeholder="Repeat Password...."><p />
-	<input type="submit" name="changepassword" value="Change Passowrd">
+	<input type="password" onkeyup="checkPass()" class="newPass" name="newpassword" id='newpassword' placeholder="New Password...."><p />
+	<input type="password" onkeyup="checkPass()" class="newPass" name="newpasswordre" id='newpasswordre' placeholder="Repeat Password...."><p />
+	<input type="submit" name="changepassword" id='submit' value="Change Password">
 </form>
+<script>
+	$('#submit').attr('disabled', 'disabled');
+
+	function checkPassSuper(){	
+		if($('#newpassword').val() == $('#newpasswordre').val()){
+			return true;
+		}else if($('#newpassword').val() != $('#newpasswordre').val()){
+			return false;
+		}
+	}	
+
+	function checkPass(){
+		if(checkPassSuper()){
+			$('.newPass').css('color', 'green');
+			$('#submit').removeAttr('disabled', 'disabled');
+		}else {
+			$('.newPass').css('color', 'red');
+			$('#submit').attr('disabled', 'disabled');
+		}
+	}
+</script>
