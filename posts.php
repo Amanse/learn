@@ -12,8 +12,8 @@ if(isset($_GET['id'])){
 		//echo "<br>";
 		Comment::displayComments($_GET['id']);
 	}
-
-	$username = DB::query("SELECT username FROM users WHERE id=:id", array(":id"=>Login::isLoggedIn()))[0]['username'];
+	$PosterID = DB::query("SELECT user_id FROM posts WHERE id=:id", array(":id"=>$_GET['id']))[0]['user_id'];
+	$username = DB::query("SELECT username FROM users WHERE id=:id", array(":id"=>$PosterID))[0]['username'];
 	echo "<br>";
 	echo "<a href='profile.php?username=".$username."'>Back to profile</a>";
 }
