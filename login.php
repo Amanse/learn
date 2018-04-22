@@ -41,6 +41,7 @@ if(isset($_POST['login'])){
  	 <meta name="viewport" content="width=device-width, initial-scale=1">
  	<title>Login</title>
  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+ 	<script src="http://code.jquery.com/jquery-3.3.1.js"></script>
  	<style>
 		@import url('https://fonts.googleapis.com/css?family=ABeeZee|Questrial|Ropa+Sans');
 
@@ -69,7 +70,7 @@ if(isset($_POST['login'])){
 					<div class="field">
 						<div class="control">
 							<lable class="lable"><span style="font-family: 'Questrial', sans-serif;">Username</span></lable>
-							<input type="text" class="input is-rounded is-primary" name="username" autocomplete="off"><br>
+							<input type="text" class="input is-rounded is-primary" name="username" id='username' autocomplete="off"><br>
 						</div>
 					</div>
 				</div>
@@ -77,7 +78,7 @@ if(isset($_POST['login'])){
 						<div class="field">
 							<div class="control">
 								<lable class="lable"><span style="font-family: 'Questrial', sans-serif;">Password</span></lable>
-								<input type="password" class="input is-rounded is-primary " name="password"><br>
+								<input type="password" id='password' class="input is-rounded is-primary " name="password"><br>
 						</div>
 					</div>	
 				</div>
@@ -87,4 +88,7 @@ if(isset($_POST['login'])){
 		</div>
 	</div>	
 </section>
+<script>
+	
+</script>
 </body>
