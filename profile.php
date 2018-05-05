@@ -110,7 +110,7 @@ if(isset($_GET['username'])){
       <div class="container">
         <div class="navbar-brand">
           <span class="navbar-item">
-            <h1 class="title title-1"><?php if(strlen($username <= 9)){echo substr($username, 0 ,7);}else{echo $username;} if($isVerified){echo "<i class='material-icons' style='font-size:38px;'>verified_user</i>";} ?></h1>
+            <h1 class="title title-1"><?php if(strlen($username <= 10)){echo substr($username, 0 ,10);}else{echo $username;} if($isVerified){echo "<i class='material-icons' style='font-size:38px;'>verified_user</i>";} ?></h1>
           </span>
           <span class="navbar-burger burger" id='NavBarToggle' data-target="navbarMenuHeroA">
             <span></span>

@@ -77,8 +77,12 @@ class Post{
 
 			//post and like button	
 			$posts .= "<div class='hero-body'><div class='container '><h1 class='title'>".self::link_add($p['body'])."</h1><form action='profile.php?username=$username&postid=".$p['id']."' method='post'>
-			<input type='submit' name='like' class='button is-info' value='Like'>
-			<span>".$p['likes']." Likes</span>";
+			<input type='submit' name='like' class='button is-info' value='Like'>";
+			if($userid == $loggedinuserid){
+			$posts .= "<span><a href='likes.php?id=".$p['id']."'>".$p['likes']." Likes</a></span>";
+			}else{
+				$posts .= "<span>".$p['likes']." Likes</span>";
+			}
 			if($userid == $loggedinuserid){
 				$posts .= " <input type='submit' class='button is-light' name='deletepost' value='x'>";
 			}
