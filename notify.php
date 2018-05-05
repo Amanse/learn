@@ -79,6 +79,11 @@ if(DB::query('SELECT * FROM notification WHERE reciever=:userid', array(':userid
 	}elseif ($n['type'] == 4) {
 		$senderName = DB::query('SELECT username FROM users WHERE id=:senderid', array(":senderid"=>$n['sender']))[0]['username'];
 		echo "<b><a href='profile.php?username=$senderName'>".$senderName."</a></b> sent you a message! see it <a href='full-chat.php?username=".$senderName."'> here </a> <hr>";
+	}else if ($n['type'] == 5){
+		$senderName = DB::query('SELECT username FROM users WHERE id=:senderid', array(":senderid"=>$n['sender']))[0]['username'];
+		$comment = json_decode($n['extra'], true);
+		echo "<b><a href='profile.php?username=$senderName'>".$senderName."</a></b> commented on your post - ".$comment['Comment']." <hr>";
+
 	}
 }
 }

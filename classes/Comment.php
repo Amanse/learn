@@ -8,6 +8,9 @@ class Comment{
 	
 			if(DB::query('SELECT id FROM posts WHERE id=:postid', array(':postid'=>$postid))){
 				DB::query('INSERT INTO comments VALUES (\'\', :comment, :userid, NOW(), :postid)', array(':comment'=>$commentbody, ':userid'=>$userid, 'postid'=>$postid));
+				$extra = ' { "Comment" : "'.htmlentities($commentbody).'"} ';
+				$r = DB::query("SELECT user_id FROM posts WHERE id=:id", array(":id"=>$postid))[0]['user_id'];
+				DB::query("INSERT INTO notification VALUES ('', :type, :reciever, :sender, :extra)", array(':type'=>5, ':reciever'=>$r, ':sender'=>$userid, ':extra'=>$extra));
 			}else{
 				echo "Invalid Post id";
 			}
@@ -16,7 +19,7 @@ class Comment{
 
 	public static function displayComments($postid){
 
-		$comments = DB::query('SELECT comments.comment, users.username FROM comments, users WHERE post_id = :postid AND comments.user_id = users.id ORDER BY comments.id DESC LIMIT 2 ', array(':postid'=>$postid));
+		$comments = DB::query('SELECT comments.comment, users.username FROM comments, users WHERE post_id = :postid AND comments.user_id = users.id ORDER BY comments.id DESC  ', array(':postid'=>$postid));
 		 
 		 foreach ($comments as $comment ) {
 		 	echo "<div id='AllC'>";

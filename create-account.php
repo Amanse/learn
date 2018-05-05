@@ -64,7 +64,7 @@ if(isset($_POST['create-account'])){
 	<div class="hero-body">
 		<div class="container is-one-third">
 			<h1 class="title" style="font-family: 'ABeeZee', sans-serif; font-size:60px;">EverVibe</h1>
-			<h1 class="heading">Creat-account</h1>
+			<h1 class="heading">Create-account</h1>
 				<form action="create-account.php" method="post">
 					<lable class="lable"><span style="font-family: 'Questrial', sans-serif;">Username</span></lable>
 					<input type="text" class="input is-rounded is-primary" name="username" ><br>
